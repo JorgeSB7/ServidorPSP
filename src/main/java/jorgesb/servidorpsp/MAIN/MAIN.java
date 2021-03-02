@@ -3,6 +3,7 @@ package jorgesb.servidorpsp.MAIN;
 import java.io.*;
 import java.net.*;
 import java.util.logging.*;
+import jorgesb.servidorpsp.DAO.DAO;
 import jorgesb.servidorpsp.GESCON.GESCON;
 
 /**
@@ -12,6 +13,7 @@ import jorgesb.servidorpsp.GESCON.GESCON;
 public class MAIN {
     public static void main(String[] args) {
           ServerSocket ss;
+          DAO dao=new DAO();
         System.out.print("Inicializando servidor... ");
         try {
             ss = new ServerSocket(10578);
@@ -21,7 +23,7 @@ public class MAIN {
                 Socket socket;
                 socket = ss.accept();
                 System.out.println("Nueva conexión entrante: "+socket);
-                ((GESCON) new GESCON(socket, idSession)).start();
+                ((GESCON) new GESCON(socket, idSession,dao)).start();
                 idSession++;
             }
         } catch (IOException ex) {
