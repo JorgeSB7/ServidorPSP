@@ -2,6 +2,10 @@ package jorgesb.servidorpsp.GESCON;
 
 import java.io.*;
 import java.net.*;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.logging.*;
 import jorgesb.servidorpsp.DAO.DAO;
 import jorgesb.servidorpsp.Model.Cliente;
@@ -94,19 +98,63 @@ public class GESCON extends Thread {
                         do {
                             switch (op2) {
                                 case "1":
-
+                                    String dni = dis.readUTF();
+                                    String nombre = dis.readUTF();
+                                    String apellidos = dis.readUTF();
+                                    String fecha_nac = dis.readUTF();
+                                    String telefono = dis.readUTF();
+                                    String email = dis.readUTF();
+                                    String log = dis.readUTF();
+                                    String password = dis.readUTF();
+                                    Cliente cl = new Cliente(nombre, apellidos, dni, log, password, Date.valueOf(fecha_nac), telefono, email);
+                                    this.dao.insertCliente(cl);
                                     break;
                                 case "2":
-
+                                    List<Cliente> lcl = this.dao.getAllCliente();
+                                    for (Cliente elem : lcl) {
+                                        dos.writeUTF(elem.getCodigoCliente() + "|" + elem.getName() + "|" + elem.getApellidos() + "|" + elem.getTelefono() + "|" + elem.getEmail() + "|" + elem.getDni());
+                                    }
+                                    String idCliente = dis.readUTF();
+                                    int id = Integer.parseInt(idCliente);
+                                    Cliente cl2 = this.dao.getByIDCliente(id);
+                                    String saldo = dis.readUTF();
+                                    int dinero = Integer.parseInt(saldo);
+                                    Cuenta cuent = new Cuenta(dinero, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
+                                    int idCuenta = this.dao.insertCuenta(cuent);
+                                    this.dao.insertClienC(cl2.getCodigoCliente(), idCuenta, Timestamp.valueOf(LocalDateTime.now()));
                                     break;
                                 case "3":
-
+                                    List<Cuenta> lc = this.dao.getAllCuenta();
+                                    for (Cuenta elem : lc) {
+                                        dos.writeUTF(elem.getCodigoCuenta() + "");
+                                        dos.writeUTF("--------------------------");
+                                    }
+                                    String idC = dis.readUTF();
+                                    int idCount = Integer.parseInt(idC);
+                                    cuenta = this.dao.getByIDCuenta(idCount);
+                                    dos.writeUTF(cuenta.toString());
                                     break;
                                 case "4":
-
+                                    List<Cliente> lclients = this.dao.getAllCliente();
+                                    for (Cliente elem : lclients) {
+                                        dos.writeUTF(elem.getCodigoCliente() + "");
+                                        dos.writeUTF("---------------------------");
+                                    }
+                                    String idCl = dis.readUTF();
+                                    int idCli = Integer.parseInt(idCl);
+                                    Cliente cli = this.dao.getByIDCliente(idCli);
+                                    dos.writeUTF(cli.toString());
                                     break;
                                 case "5":
-
+                                    List<Cuenta> lcu = this.dao.getAllCuenta();
+                                    for (Cuenta elem : lcu) {
+                                        dos.writeUTF(elem.getCodigoCuenta() + "");
+                                        dos.writeUTF("--------------------------");
+                                    }
+                                    String idCu = dis.readUTF();
+                                    int idCoun = Integer.parseInt(idCu);
+                                    cuenta = this.dao.getByIDCuenta(idCoun);
+                                    this.dao.removeCuenta(cuenta);
                                     break;
                                 case "0":
                                     break;
