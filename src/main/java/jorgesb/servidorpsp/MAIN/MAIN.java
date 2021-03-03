@@ -12,7 +12,7 @@ import jorgesb.servidorpsp.GESCON.GESCON;
  */
 public class MAIN {
     public static void main(String[] args) {
-        /*  ServerSocket ss;
+          ServerSocket ss;
           DAO dao=new DAO();
         System.out.print("Inicializando servidor... ");
         try {
@@ -28,8 +28,8 @@ public class MAIN {
             }
         } catch (IOException ex) {
             Logger.getLogger(MAIN.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-        
+        }
+       /* 
        ServerSocket servidor = null;
         Socket sc = null;
         DataInputStream in;
@@ -57,7 +57,9 @@ public class MAIN {
                 String mensaje = in.readUTF();
  
                 System.out.println(mensaje);
+                 String mensaje2 = in.readUTF();
  
+                System.out.println(mensaje2);
                 //Le envio un mensaje
                 out.writeUTF("¡Hola mundo desde el servidor!");
  
@@ -70,6 +72,6 @@ public class MAIN {
         } catch (IOException ex) {
             Logger.getLogger(MAIN.class.getName()).log(Level.SEVERE, null, ex);
         }
- 
+ */
     }
 }

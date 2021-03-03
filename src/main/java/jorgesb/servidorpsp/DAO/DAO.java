@@ -29,8 +29,8 @@ public class DAO {
         UPDATE("UPDATE cliente SET dni=?,login=?,nombre=?,apellidos=?,password=?,fecha_nac=?,telefono=?,email=? WHERE codigoCliente=?"),
         DELETE("DELETE FROM cliente WHERE codigoCliente=?"),
         GETBYID("SELECT codigoCliente, dni, login, nombre,apellidos,password,fecha_nac,telefono,email FROM cliente Where codigoCliente=?"),
-        GETALL("SELECT codigoCliente, dni, login, nombre,apellidos,password,fecha_nac,telefono,email FROM cliente");
-        //   GETDISCOLISTBYID("SELECT d.ID, d.Nombre, d.Foto, d.fechap, d.IDArtista FROM disco as d INNER JOIN artista as art on art.ID=d.IDArtista WHERE art.ID=?");
+        GETALL("SELECT codigoCliente, dni, login, nombre,apellidos,password,fecha_nac,telefono,email FROM cliente"),
+        GETCLIENTBYCREDENTIALS("select codigoCliente, dni, login, nombre,apellidos,password,fecha_nac,telefono,email from cliente where login like ? and  password like ?");
 
         private String q;
 
@@ -49,7 +49,8 @@ public class DAO {
         DELETE("DELETE FROM operarios WHERE codigoOperario=?"),
         DELETEALL("DELETE FROM operarios INNER JOIN WHERE codigoOperario=?"),
         GETBYID("SELECT codigoOperario,Nombre,Apellidos,Login,Password FROM operarios Where codigoOperario=?"),
-        GETALL("SELECT  codigoOperario,Nombre,Apellidos,Login,Password FROM operarios");
+        GETALL("SELECT  codigoOperario,Nombre,Apellidos,Login,Password FROM operarios"),
+        GETOPERARIOBYCREDENTIALS("select codigoOperario,Nombre,Apellidos,Login,Password from operarios where Login like ? and  Password like ?");
 
         private String q;
 
@@ -238,6 +239,40 @@ public class DAO {
             }
         }
         return c;
+    }
+
+    public synchronized Operario getOperarioByCredentials(String login, String pass) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        Operario a = new Operario();
+        try {
+            conn = ConnectionUtils.getConnection();
+            stat = conn.prepareStatement(queriesOperario.GETOPERARIOBYCREDENTIALS.getQ());
+            stat.setString(1, login);
+            stat.setString(2, pass);
+            rs = stat.executeQuery();
+            if (rs.next()) {
+                a = convertOperario(rs);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (stat != null) {
+                try {
+                    stat.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return a;
     }
 
     /**
@@ -436,6 +471,40 @@ public class DAO {
         return a;
     }
 
+    public synchronized Cliente getClienteByCredentials(String login, String pass) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        Cliente a = new Cliente();
+        try {
+            conn = ConnectionUtils.getConnection();
+            stat = conn.prepareStatement(queriesCliente.GETCLIENTBYCREDENTIALS.getQ());
+            stat.setString(1, login);
+            stat.setString(2, pass);
+            rs = stat.executeQuery();
+            if (rs.next()) {
+                a = convertCliente(rs);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (stat != null) {
+                try {
+                    stat.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return a;
+    }
+
     public synchronized boolean searchByIDCliente(int id) {
         boolean result = false;
         PreparedStatement stat = null;
@@ -474,7 +543,7 @@ public class DAO {
         return result;
     }
 
-     public synchronized int insertCuenta(Cuenta a) {
+    public synchronized int insertCuenta(Cuenta a) {
         int result = -1;
         try {
             conn = ConnectionUtils.getConnection();
@@ -484,7 +553,7 @@ public class DAO {
                 PreparedStatement stat = conn.prepareStatement(queriesCuenta.INSERT.getQ(), Statement.RETURN_GENERATED_KEYS);
                 stat.setFloat(1, a.getSaldo());
                 stat.setTimestamp(2, a.getFechaHoraC());
-                stat.setTimestamp(3,  a.getFechaHoraUM());
+                stat.setTimestamp(3, a.getFechaHoraUM());
 
                 stat.executeUpdate();
                 try ( ResultSet generatedKeys = stat.getGeneratedKeys()) {
@@ -499,7 +568,7 @@ public class DAO {
         }
         return a.getCodigoCuenta();
     }
-    
+
     public synchronized void editCuenta(Cuenta a) {
         try {
             conn = ConnectionUtils.getConnection();
@@ -507,14 +576,14 @@ public class DAO {
             stat.setFloat(1, a.getSaldo());
             stat.setTimestamp(2, (java.sql.Timestamp) a.getFechaHoraC());
             stat.setTimestamp(3, (java.sql.Timestamp) a.getFechaHoraUM());
-             stat.setInt(4, a.getCodigoCuenta());
+            stat.setInt(4, a.getCodigoCuenta());
             stat.executeUpdate();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public synchronized void removeCuenta(Cuenta a) {
         PreparedStatement ps = null;
         try {
@@ -537,7 +606,7 @@ public class DAO {
             }
         }
     }
-    
+
     protected synchronized Cuenta convertCuenta(ResultSet rs) throws SQLException {
         int codigoCuenta = rs.getInt("codigoCuenta");
         Float saldo = rs.getFloat("saldo");
@@ -546,7 +615,7 @@ public class DAO {
         Cuenta a = new Cuenta(codigoCuenta, saldo, fechaHoraC, fechaHoraUM);
         return a;
     }
-    
+
     public synchronized List<Cuenta> getAllCuenta() {
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -611,7 +680,7 @@ public class DAO {
         }
         return a;
     }
-    
+
     public synchronized boolean searchByIDCuenta(int codigoCuenta) {
         boolean result = false;
         PreparedStatement stat = null;
@@ -649,22 +718,22 @@ public class DAO {
         }
         return result;
     }
-    
+
     public synchronized boolean insertClienC(int a, int c, Timestamp f) {
         boolean result = false;
-        
+
         try {
             PreparedStatement stat = null;
             conn = ConnectionUtils.getConnection();
-           stat = conn.prepareStatement(queriesCuenta.INSERTCLIENTC.getQ());
+            stat = conn.prepareStatement(queriesCuenta.INSERTCLIENTC.getQ());
             if (getByIDCuenta(a) != null && getByIDCliente(c) != null) {
                 stat.setInt(1, a);
                 stat.setInt(2, c);
                 stat.setTimestamp(3, f);
                 stat.executeUpdate();
-                result=true;
+                result = true;
             } else {
-                result=false;
+                result = false;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -672,8 +741,8 @@ public class DAO {
 
         return result;
     }
-    
-     public synchronized List<Cliente> getListClienteCount(int id) {
+
+    public synchronized List<Cliente> getListClienteCount(int id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
         List<Cliente> clientes = new ArrayList<>();
@@ -705,8 +774,8 @@ public class DAO {
         }
         return clientes;
     }
-     
-     public synchronized Cuenta getCountByClient(int codigoCliente) {
+
+    public synchronized Cuenta getCountByClient(int codigoCliente) {
         PreparedStatement stat = null;
         ResultSet rs = null;
         Cuenta a = new Cuenta();
@@ -737,9 +806,9 @@ public class DAO {
             }
         }
         return a;
-    } 
-      
-     public synchronized boolean searchCountByClient(int codigoCliente) {
+    }
+
+    public synchronized boolean searchCountByClient(int codigoCliente) {
         boolean result = false;
         PreparedStatement stat = null;
         ResultSet rs = null;
