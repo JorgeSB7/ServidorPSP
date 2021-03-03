@@ -16,6 +16,7 @@ public class Cuenta extends Thread{
     protected Timestamp fechaHoraUA;
     
     public Cuenta() {
+        this.codigoCuenta=-1;
     }
 
     public Cuenta(float saldo, Timestamp fechaHoraC, Timestamp fechaHoraUM) {

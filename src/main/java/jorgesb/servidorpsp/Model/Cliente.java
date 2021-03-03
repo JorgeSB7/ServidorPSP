@@ -36,6 +36,7 @@ public class Cliente extends Thread{
         this.op4 = op4;
     }
     public Cliente() {
+         this.codigoCliente = -1;
     }
 
     public Cliente(String nombre, String apellidos, String dni, String login, String password, Date fecha_nac, String telefono, String email) {
