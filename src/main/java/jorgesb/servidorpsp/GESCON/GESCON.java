@@ -122,9 +122,10 @@ public class GESCON extends Thread {
                                         break;
                                     case "2":
                                         List<Cliente> lcl = this.dao.getAllCliente();
-                                        for (Cliente elem : lcl) {
+                                         dos.writeUTF(lcl.toString());
+                                        /*for (Cliente elem : lcl) {
                                             dos.writeUTF(elem.getCodigoCliente() + "|" + elem.getName() + "|" + elem.getApellidos() + "|" + elem.getTelefono() + "|" + elem.getEmail() + "|" + elem.getDni());
-                                        }
+                                        }*/
                                         String idCliente = dis.readUTF();
                                         int id = Integer.parseInt(idCliente);
                                         Cliente cl2 = this.dao.getByIDCliente(id);
@@ -137,10 +138,11 @@ public class GESCON extends Thread {
                                         break;
                                     case "3":
                                         List<Cuenta> lc = this.dao.getAllCuenta();
-                                        for (Cuenta elem : lc) {
+                                        dos.writeUTF(lc.toString());
+                                       /* for (Cuenta elem : lc) {
                                             dos.writeUTF(elem.getCodigoCuenta() + "");
                                             dos.writeUTF("--------------------------");
-                                        }
+                                        }*/
                                         String idC = dis.readUTF();
                                         int idCount = Integer.parseInt(idC);
                                         cuenta = this.dao.getByIDCuenta(idCount);
@@ -148,10 +150,11 @@ public class GESCON extends Thread {
                                         break;
                                     case "4":
                                         List<Cliente> lclients = this.dao.getAllCliente();
-                                        for (Cliente elem : lclients) {
+                                         dos.writeUTF(lclients.toString());
+                                      /*  for (Cliente elem : lclients) {
                                             dos.writeUTF(elem.getCodigoCliente() + "");
                                             dos.writeUTF("---------------------------");
-                                        }
+                                        }*/
                                         String idCl = dis.readUTF();
                                         int idCli = Integer.parseInt(idCl);
                                         Cliente cli = this.dao.getByIDCliente(idCli);
@@ -159,10 +162,11 @@ public class GESCON extends Thread {
                                         break;
                                     case "5":
                                         List<Cuenta> lcu = this.dao.getAllCuenta();
-                                        for (Cuenta elem : lcu) {
+                                         dos.writeUTF(lcu.toString());
+                                       /* for (Cuenta elem : lcu) {
                                             dos.writeUTF(elem.getCodigoCuenta() + "");
                                             dos.writeUTF("--------------------------");
-                                        }
+                                        }*/
                                         String idCu = dis.readUTF();
                                         int idCoun = Integer.parseInt(idCu);
                                         cuenta = this.dao.getByIDCuenta(idCoun);
