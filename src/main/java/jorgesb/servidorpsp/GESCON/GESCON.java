@@ -65,10 +65,12 @@ public class GESCON extends Thread {
                             do {
                                 switch (op2) {
                                     case "1":
+                                        System.out.println("CASO 1");
                                         cuenta = this.dao.getCountByClient(c.getCodigoCliente());
                                         dos.writeUTF(cuenta.toString());
                                         break;
                                     case "2":
+                                        System.out.println("CASO 2");
                                         cuenta = this.dao.getCountByClient(c.getCodigoCliente());
                                         String dineroRetirado = dis.readUTF();
                                         int dinero = Integer.parseInt(dineroRetirado);
@@ -77,6 +79,7 @@ public class GESCON extends Thread {
                                         dos.writeUTF("Se ha retirado el dinero corretamente");
                                         break;
                                     case "3":
+                                        System.out.println("CASO 3");
                                         cuenta = this.dao.getCountByClient(c.getCodigoCliente());
                                         String dineroIngresado = dis.readUTF();
                                         int dinero2 = Integer.parseInt(dineroIngresado);
@@ -86,8 +89,11 @@ public class GESCON extends Thread {
                                         break;
                                     case "0":
                                         break;
+                                    default:
+                                        break;
                                 }
-                            } while (op2 != "0");
+                                op2 = dis.readUTF();
+                            } while (!op2.equals("0"));
                         } else {
                             dos.writeUTF("No existe el usuario con esas credenciales");
                         }
@@ -162,8 +168,11 @@ public class GESCON extends Thread {
                                         break;
                                     case "0":
                                         break;
+                                    default:
+                                        break;
                                 }
-                            } while (op != "0");
+                                op2 = dis.readUTF();
+                            } while (!op2.equals("0"));
                         } else {
                             dos.writeUTF("No existe el usuario con esas credenciales");
                         }
@@ -171,7 +180,10 @@ public class GESCON extends Thread {
                     case "0":
 
                         break;
+                    default:
+                        break;
                 }
+                op = dis.readUTF();
             } while (op != "0");
         } catch (IOException ex) {
             Logger.getLogger(GESCON.class.getName()).log(Level.SEVERE, null, ex);
