@@ -118,6 +118,7 @@ public class GESCON extends Thread {
                                         String password = dis.readUTF();
                                         Cliente cl = new Cliente(nombre, apellidos, dni, log, password, Date.valueOf(fecha_nac), telefono, email);
                                         this.dao.insertCliente(cl);
+                                        dos.writeUTF("Se ha creado satisfactoriamente el cliente");
                                         break;
                                     case "2":
                                         List<Cliente> lcl = this.dao.getAllCliente();
@@ -132,6 +133,7 @@ public class GESCON extends Thread {
                                         Cuenta cuent = new Cuenta(dinero, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
                                         int idCuenta = this.dao.insertCuenta(cuent);
                                         this.dao.insertClienC(cl2.getCodigoCliente(), idCuenta, Timestamp.valueOf(LocalDateTime.now()));
+                                        dos.writeUTF("Se ha creado satisfactoriamente la cuenta");
                                         break;
                                     case "3":
                                         List<Cuenta> lc = this.dao.getAllCuenta();
@@ -165,6 +167,7 @@ public class GESCON extends Thread {
                                         int idCoun = Integer.parseInt(idCu);
                                         cuenta = this.dao.getByIDCuenta(idCoun);
                                         this.dao.removeCuenta(cuenta);
+                                        dos.writeUTF("Se ha eliminafo correctamente la cuenta");
                                         break;
                                     case "0":
                                         break;
