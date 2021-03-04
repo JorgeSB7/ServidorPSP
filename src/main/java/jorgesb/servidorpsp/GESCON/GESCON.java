@@ -5,6 +5,7 @@ import java.net.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.*;
 import jorgesb.servidorpsp.DAO.DAO;
@@ -50,6 +51,7 @@ public class GESCON extends Thread {
         String login = "";
         String pass = "";
         Cuenta cuenta = new Cuenta();
+
         try {
             op = dis.readUTF();
             do {
@@ -102,7 +104,7 @@ public class GESCON extends Thread {
                         login = dis.readUTF();
                         pass = dis.readUTF();
                         Operario o = this.dao.getOperarioByCredentials(login, pass);
-                        if (o != null) {
+                        if (o.getCodigoOperario() > -1) {
                             dos.writeUTF("ok");
                             String op2 = dis.readUTF();
                             do {
@@ -116,13 +118,18 @@ public class GESCON extends Thread {
                                         String email = dis.readUTF();
                                         String log = dis.readUTF();
                                         String password = dis.readUTF();
-                                        Cliente cl = new Cliente(nombre, apellidos, dni, log, password, Date.valueOf(fecha_nac), telefono, email);
+                                        Date d = Date.valueOf(fecha_nac);
+                                        Cliente cl = new Cliente(nombre, apellidos, dni, log, password, d, telefono, email);
                                         this.dao.insertCliente(cl);
                                         dos.writeUTF("Se ha creado satisfactoriamente el cliente");
                                         break;
                                     case "2":
                                         List<Cliente> lcl = this.dao.getAllCliente();
-                                         dos.writeUTF(lcl.toString());
+                                        List<String> ids = new ArrayList<>();
+                                        for (Cliente elem : lcl) {
+                                            ids.add(elem.getCodigoCliente() + "\n");
+                                        }
+                                        dos.writeUTF(ids.toString());
                                         /*for (Cliente elem : lcl) {
                                             dos.writeUTF(elem.getCodigoCliente() + "|" + elem.getName() + "|" + elem.getApellidos() + "|" + elem.getTelefono() + "|" + elem.getEmail() + "|" + elem.getDni());
                                         }*/
@@ -138,8 +145,12 @@ public class GESCON extends Thread {
                                         break;
                                     case "3":
                                         List<Cuenta> lc = this.dao.getAllCuenta();
-                                        dos.writeUTF(lc.toString());
-                                       /* for (Cuenta elem : lc) {
+                                        List<String> ids2 = new ArrayList<>();
+                                        for (Cuenta elem : lc) {
+                                            ids2.add(elem.getCodigoCuenta() + "\n");
+                                        }
+                                        dos.writeUTF(ids2.toString());
+                                        /* for (Cuenta elem : lc) {
                                             dos.writeUTF(elem.getCodigoCuenta() + "");
                                             dos.writeUTF("--------------------------");
                                         }*/
@@ -150,8 +161,12 @@ public class GESCON extends Thread {
                                         break;
                                     case "4":
                                         List<Cliente> lclients = this.dao.getAllCliente();
-                                         dos.writeUTF(lclients.toString());
-                                      /*  for (Cliente elem : lclients) {
+                                        List<String> ids3 = new ArrayList<>();
+                                        for (Cliente elem : lclients) {
+                                            ids3.add(elem.getCodigoCliente() + "\n");
+                                        }
+                                        dos.writeUTF(ids3.toString());
+                                        /*  for (Cliente elem : lclients) {
                                             dos.writeUTF(elem.getCodigoCliente() + "");
                                             dos.writeUTF("---------------------------");
                                         }*/
@@ -162,8 +177,12 @@ public class GESCON extends Thread {
                                         break;
                                     case "5":
                                         List<Cuenta> lcu = this.dao.getAllCuenta();
-                                         dos.writeUTF(lcu.toString());
-                                       /* for (Cuenta elem : lcu) {
+                                        List<String> ids4 = new ArrayList<>();
+                                        for (Cuenta elem : lcu) {
+                                            ids4.add(elem.getCodigoCuenta() + "\n");
+                                        }
+                                        dos.writeUTF(ids4.toString());
+                                        /* for (Cuenta elem : lcu) {
                                             dos.writeUTF(elem.getCodigoCuenta() + "");
                                             dos.writeUTF("--------------------------");
                                         }*/
