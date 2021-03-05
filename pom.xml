@@ -46,7 +46,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>jorgesb.servidorpsp.MAIN</mainClass>
+                            <mainClass>jorgesb.servidorpsp.MAIN.MAIN</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
