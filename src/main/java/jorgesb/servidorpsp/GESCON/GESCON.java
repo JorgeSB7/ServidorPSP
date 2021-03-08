@@ -76,8 +76,7 @@ public class GESCON extends Thread {
                                         cuenta = this.dao.getCountByClient(c.getCodigoCliente());
                                         String dineroRetirado = dis.readUTF();
                                         int dinero = Integer.parseInt(dineroRetirado);
-                                        cuenta.setSaldo(cuenta.getSaldo() - (float) dinero);
-                                        this.dao.editCuenta(cuenta);
+                                        accesoCliente(1, cuenta, dinero);
                                         dos.writeUTF("Se ha retirado el dinero corretamente");
                                         break;
                                     case "3":
@@ -85,8 +84,7 @@ public class GESCON extends Thread {
                                         cuenta = this.dao.getCountByClient(c.getCodigoCliente());
                                         String dineroIngresado = dis.readUTF();
                                         int dinero2 = Integer.parseInt(dineroIngresado);
-                                        cuenta.setSaldo(cuenta.getSaldo() + (float) dinero2);
-                                        this.dao.editCuenta(cuenta);
+                                        accesoCliente(2, cuenta, dinero2);
                                         dos.writeUTF("Se ha ingresado el dinero corretamente");
                                         break;
                                     case "0":
@@ -110,17 +108,7 @@ public class GESCON extends Thread {
                             do {
                                 switch (op2) {
                                     case "1":
-                                        String dni = dis.readUTF();
-                                        String nombre = dis.readUTF();
-                                        String apellidos = dis.readUTF();
-                                        String fecha_nac = dis.readUTF();
-                                        String telefono = dis.readUTF();
-                                        String email = dis.readUTF();
-                                        String log = dis.readUTF();
-                                        String password = dis.readUTF();
-                                        Date d = Date.valueOf(fecha_nac);
-                                        Cliente cl = new Cliente(nombre, apellidos, dni, log, password, d, telefono, email);
-                                        this.dao.insertCliente(cl);
+                                        accesoOperario(1);
                                         dos.writeUTF("Se ha creado satisfactoriamente el cliente");
                                         break;
                                     case "2":
@@ -130,17 +118,7 @@ public class GESCON extends Thread {
                                             ids.add(elem.getCodigoCliente() + "\n");
                                         }
                                         dos.writeUTF(ids.toString());
-                                        /*for (Cliente elem : lcl) {
-                                            dos.writeUTF(elem.getCodigoCliente() + "|" + elem.getName() + "|" + elem.getApellidos() + "|" + elem.getTelefono() + "|" + elem.getEmail() + "|" + elem.getDni());
-                                        }*/
-                                        String idCliente = dis.readUTF();
-                                        int id = Integer.parseInt(idCliente);
-                                        Cliente cl2 = this.dao.getByIDCliente(id);
-                                        String saldo = dis.readUTF();
-                                        int dinero = Integer.parseInt(saldo);
-                                        Cuenta cuent = new Cuenta(dinero, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
-                                        int idCuenta = this.dao.insertCuenta(cuent);
-                                        this.dao.insertClienC(cl2.getCodigoCliente(), idCuenta, Timestamp.valueOf(LocalDateTime.now()));
+                                        accesoOperario(2);
                                         dos.writeUTF("Se ha creado satisfactoriamente la cuenta");
                                         break;
                                     case "3":
@@ -150,10 +128,6 @@ public class GESCON extends Thread {
                                             ids2.add(elem.getCodigoCuenta() + "\n");
                                         }
                                         dos.writeUTF(ids2.toString());
-                                        /* for (Cuenta elem : lc) {
-                                            dos.writeUTF(elem.getCodigoCuenta() + "");
-                                            dos.writeUTF("--------------------------");
-                                        }*/
                                         String idC = dis.readUTF();
                                         int idCount = Integer.parseInt(idC);
                                         cuenta = this.dao.getByIDCuenta(idCount);
@@ -166,10 +140,6 @@ public class GESCON extends Thread {
                                             ids3.add(elem.getCodigoCliente() + "\n");
                                         }
                                         dos.writeUTF(ids3.toString());
-                                        /*  for (Cliente elem : lclients) {
-                                            dos.writeUTF(elem.getCodigoCliente() + "");
-                                            dos.writeUTF("---------------------------");
-                                        }*/
                                         String idCl = dis.readUTF();
                                         int idCli = Integer.parseInt(idCl);
                                         Cliente cli = this.dao.getByIDCliente(idCli);
@@ -182,14 +152,7 @@ public class GESCON extends Thread {
                                             ids4.add(elem.getCodigoCuenta() + "\n");
                                         }
                                         dos.writeUTF(ids4.toString());
-                                        /* for (Cuenta elem : lcu) {
-                                            dos.writeUTF(elem.getCodigoCuenta() + "");
-                                            dos.writeUTF("--------------------------");
-                                        }*/
-                                        String idCu = dis.readUTF();
-                                        int idCoun = Integer.parseInt(idCu);
-                                        cuenta = this.dao.getByIDCuenta(idCoun);
-                                        this.dao.removeCuenta(cuenta);
+                                        accesoOperario(3);
                                         dos.writeUTF("Se ha eliminafo correctamente la cuenta");
                                         break;
                                     case "0":
@@ -215,5 +178,56 @@ public class GESCON extends Thread {
             Logger.getLogger(GESCON.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public synchronized void accesoCliente(int n, Cuenta cuenta, int dinero) {
+        switch (n) {
+            case 1:
+                cuenta.setSaldo(cuenta.getSaldo() - (float) dinero);
+                this.dao.editCuenta(cuenta);
+                break;
+            case 2:
+                cuenta.setSaldo(cuenta.getSaldo() + (float) dinero);
+                this.dao.editCuenta(cuenta);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public synchronized void accesoOperario(int n) throws IOException {
+        switch (n) {
+            case 1:
+                String dni = dis.readUTF();
+                String nombre = dis.readUTF();
+                String apellidos = dis.readUTF();
+                String fecha_nac = dis.readUTF();
+                String telefono = dis.readUTF();
+                String email = dis.readUTF();
+                String log = dis.readUTF();
+                String password = dis.readUTF();
+                Date d = Date.valueOf(fecha_nac);
+                Cliente cl = new Cliente(nombre, apellidos, dni, log, password, d, telefono, email);
+                this.dao.insertCliente(cl);
+                break;
+            case 2:
+                String idCliente = dis.readUTF();
+                int id = Integer.parseInt(idCliente);
+                Cliente c = this.dao.getByIDCliente(id);
+                String saldo = dis.readUTF();
+                int dinero = Integer.parseInt(saldo);
+                Cuenta cuent = new Cuenta(dinero, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
+                int idCuenta = this.dao.insertCuenta(cuent);
+                this.dao.insertClienC(c.getCodigoCliente(), idCuenta, Timestamp.valueOf(LocalDateTime.now()));
+                break;
+            case 3:
+                String idCu = dis.readUTF();
+                int idCoun = Integer.parseInt(idCu);
+                Cuenta cuenta = this.dao.getByIDCuenta(idCoun);
+                this.dao.removeCuenta(cuenta);
+                break;
+            default:
+                break;
+        }
     }
 }

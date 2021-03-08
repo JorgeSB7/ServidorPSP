@@ -319,7 +319,7 @@ public class DAO {
         return result;
     }
 
-    public synchronized void insertCliente(Cliente a) {
+    public void insertCliente(Cliente a) {
         int result = -1;
         try {
             conn = ConnectionUtils.getConnection();
@@ -543,7 +543,7 @@ public class DAO {
         return result;
     }
 
-    public synchronized int insertCuenta(Cuenta a) {
+    public int insertCuenta(Cuenta a) {
         int result = -1;
         try {
             conn = ConnectionUtils.getConnection();
@@ -569,7 +569,7 @@ public class DAO {
         return a.getCodigoCuenta();
     }
 
-    public synchronized void editCuenta(Cuenta a) {
+    public void editCuenta(Cuenta a) {
         try {
             conn = ConnectionUtils.getConnection();
             PreparedStatement stat = conn.prepareStatement(queriesCuenta.UPDATE.getQ());
@@ -584,7 +584,7 @@ public class DAO {
         }
     }
 
-    public synchronized void removeCuenta(Cuenta a) {
+    public void removeCuenta(Cuenta a) {
         PreparedStatement ps = null;
         try {
             conn = ConnectionUtils.getConnection();
@@ -719,7 +719,7 @@ public class DAO {
         return result;
     }
 
-    public synchronized boolean insertClienC(int a, int c, Timestamp f) {
+    public boolean insertClienC(int a, int c, Timestamp f) {
         boolean result = false;
 
         try {
