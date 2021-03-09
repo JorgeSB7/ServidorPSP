@@ -64,7 +64,6 @@ public class GESCON extends Thread {
                         Cliente c = this.dao.getClienteByCredentials(login, pass);
                         if (c.getCodigoCliente() > -1) {
                             dos.writeUTF("ok");
-
                             do {
                                 op2 = dis.readUTF();
                                 System.out.println(op2);
@@ -107,8 +106,8 @@ public class GESCON extends Thread {
                         Operario o = this.dao.getOperarioByCredentials(login, pass);
                         if (o.getCodigoOperario() > -1) {
                             dos.writeUTF("ok");
-                            op2 = dis.readUTF();
                             do {
+                                 op2 = dis.readUTF();
                                 switch (op2) {
                                     case "1":
                                         accesoOperario(1);
