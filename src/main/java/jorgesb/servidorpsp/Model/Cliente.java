@@ -204,7 +204,7 @@ public class Cliente extends Thread{
 
     @Override
     public String toString() {
-        return "Cliente{" + "codigoCliente=" + codigoCliente + ", nombre=" + nombre + ", apellidos=" + apellidos + ", dni=" + dni + ", login=" + login + ", password=" + password + ", fecha_nac=" + fecha_nac + ", telefono=" + telefono + ", email=" + email + ", cuenta=" + cuenta + '}'+"\n";
+        return "Cliente{" + "codigoCliente=" + codigoCliente + ", nombre=" + nombre + ", apellidos=" + apellidos + ", dni=" + dni + ", login=" + login + ", password=" + password + ", fecha_nac=" + fecha_nac + ", telefono=" + telefono + ", email=" + email +'}'+"\n";
     }
 
 
