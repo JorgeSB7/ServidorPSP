@@ -48,13 +48,15 @@ public class GESCON extends Thread {
     @Override
     public void run() {
         String op = "";
+        String op2 = "";
         String login = "";
         String pass = "";
         Cuenta cuenta = new Cuenta();
 
         try {
-            op = dis.readUTF();
+
             do {
+                op = dis.readUTF();
                 switch (op) {
                     case "1":
                         login = dis.readUTF();
@@ -62,9 +64,10 @@ public class GESCON extends Thread {
                         Cliente c = this.dao.getClienteByCredentials(login, pass);
                         if (c.getCodigoCliente() > -1) {
                             dos.writeUTF("ok");
-                            String op2 = dis.readUTF();
-                            System.out.println(op2);
+
                             do {
+                                op2 = dis.readUTF();
+                                System.out.println(op2);
                                 switch (op2) {
                                     case "1":
                                         System.out.println("CASO 1");
@@ -92,7 +95,7 @@ public class GESCON extends Thread {
                                     default:
                                         break;
                                 }
-                                op2 = dis.readUTF();
+                                //op2 = dis.readUTF();
                             } while (!op2.equals("0"));
                         } else {
                             dos.writeUTF("No existe el usuario con esas credenciales");
@@ -104,7 +107,7 @@ public class GESCON extends Thread {
                         Operario o = this.dao.getOperarioByCredentials(login, pass);
                         if (o.getCodigoOperario() > -1) {
                             dos.writeUTF("ok");
-                            String op2 = dis.readUTF();
+                            op2 = dis.readUTF();
                             do {
                                 switch (op2) {
                                     case "1":
@@ -160,7 +163,7 @@ public class GESCON extends Thread {
                                     default:
                                         break;
                                 }
-                                op2 = dis.readUTF();
+                                //  op2 = dis.readUTF();
                             } while (!op2.equals("0"));
                         } else {
                             dos.writeUTF("No existe el usuario con esas credenciales");
@@ -172,7 +175,7 @@ public class GESCON extends Thread {
                     default:
                         break;
                 }
-                op = dis.readUTF();
+                //op = dis.readUTF();
             } while (op != "0");
         } catch (IOException ex) {
             Logger.getLogger(GESCON.class.getName()).log(Level.SEVERE, null, ex);
